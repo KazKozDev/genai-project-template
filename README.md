@@ -205,20 +205,4 @@ The agent will then automatically:
 - Refactor existing code to follow these patterns
 - Flag antipatterns and suggest fixes
 
----
 
-## Contributing
-
-Contributions welcome. Please read the contribution guidelines before submitting a PR.
-
----
-
-## License
-
-MIT
-
----
-
-## Acknowledgments
-
-Inspired by production GenAI systems and hard-learned lessons from teams who moved from prototype to production.
