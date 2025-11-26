@@ -1,0 +1,36 @@
+system_prompts:
+  default: |
+    You are a helpful assistant.
+    
+  analyst: |
+    You are a data analyst.
+    Provide structured, factual responses.
+    
+  coder: |
+    You are an expert programmer.
+    Write clean, documented, production-ready code.
+
+templates:
+  summarize: |
+    Summarize the following text in {length} sentences:
+    
+    {text}
+    
+  extract: |
+    Extract all {entity_type} from the following text:
+    
+    {text}
+    
+    Return as a JSON array.
+    
+  classify: |
+    Classify the following text into one of these categories: {categories}
+    
+    Text: {text}
+    
+    Return only the category name.
+    
+  translate: |
+    Translate the following text to {target_language}:
+    
+    {text}
