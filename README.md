@@ -204,4 +204,10 @@ The agent will then automatically:
 - Refactor existing code to follow these patterns
 - Flag antipatterns and suggest fixes
 
+---
 
+If you like this project, please give it a star ⭐
+
+For questions, feedback, or support, reach out to:
+
+[Artem KK](https://www.linkedin.com/in/kazkozdev/) | MIT [LICENSE](LICENSE)
