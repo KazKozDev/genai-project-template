@@ -2,7 +2,6 @@
 
 A production-ready project template and coding standards for building robust GenAI applications.
 
----
 
 ## The Problem
 
