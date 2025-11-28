@@ -6,6 +6,50 @@
 
 # GenAI Project Structure Instructions
 
+## How to Use This Document
+
+**CRITICAL: Understand the difference between RULES, TEMPLATES, and USER TASKS.**
+
+### What is MANDATORY (follow always):
+- Directory structure pattern
+- Code style (Black, Ruff, type hints, docstrings)
+- Configuration externalization (no hardcoded prompts/keys)
+- Validation checklist items
+
+### What is TEMPLATE/EXAMPLE (use as reference, adapt to context):
+- Code snippets in "Required Components" section — these are EXAMPLES of implementation, not code to copy verbatim
+- Configuration YAML files — these are TEMPLATES showing structure, not actual content
+- Test files — these show PATTERNS, adapt to actual code being tested
+
+### What comes from USER (highest priority):
+- **The actual task** — what to build, refactor, or fix
+- **Existing codebase** — preserve and improve, do NOT delete and replace
+- **Specific requirements** — user's instructions override examples
+
+### Behavioral Rules
+
+1. **NEVER delete existing user code to replace with template code**
+2. **ALWAYS ask clarifying questions if task is ambiguous**
+3. **When refactoring**: improve existing code to match standards, don't rewrite from scratch
+4. **When creating new**: use templates as structural guide, implement user's actual requirements
+5. **Templates are NOT the task** — they show HOW to structure code, not WHAT to build
+
+### Example Scenarios
+
+**User says**: "Refactor my LLM client to match your standards"
+- ✅ DO: Add type hints, docstrings, extract config, keep user's logic
+- ❌ DON'T: Delete user's code and paste BaseLLMClient template
+
+**User says**: "Create a new project for sentiment analysis"
+- ✅ DO: Use directory structure, create files following patterns, implement sentiment analysis
+- ❌ DON'T: Create generic "summarize" and "extract" templates from examples
+
+**User says**: "Add caching to my existing code"
+- ✅ DO: Integrate ResponseCache pattern into user's existing architecture
+- ❌ DON'T: Replace user's code with cache.py template verbatim
+
+---
+
 ## Activation
 
 Apply these rules when:
@@ -188,6 +232,8 @@ ruff check . --fix   # lint and auto-fix
 
 ## Configuration Templates
 
+> **Note**: These are STRUCTURAL TEMPLATES. Adapt content to user's actual project requirements.
+
 ### model_config.yaml:
 ```yaml
 models:
@@ -317,6 +363,8 @@ htmlcov/
 ```
 
 ## Required Components
+
+> **Note**: These are IMPLEMENTATION PATTERNS. Use as reference for structure and style, adapt logic to user's requirements.
 
 ### Base LLM Client (src/llm/base.py):
 ```python
@@ -586,7 +634,7 @@ class ResponseCache:
 import time
 import logging
 from functools import wraps
-from typing import Callable, Type, Tuple, TypeVar, Any
+from typing import Callable, Type, Tuple, TypeVar, Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -701,6 +749,8 @@ def get_logger(name: str) -> logging.Logger:
 ```
 
 ## Required Tests
+
+> **Note**: These are TEST PATTERNS. Write tests for user's actual implementation, not these examples.
 
 Every GenAI project must include tests for core utilities. Create tests in `tests/` directory.
 
@@ -1108,3 +1158,23 @@ from dotenv import load_dotenv
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 ```
+
+## Working With User Code
+
+### When User Provides Existing Code:
+1. **Analyze first** — understand what the code does
+2. **Identify gaps** — what doesn't match standards
+3. **Propose changes** — explain what will be improved
+4. **Refactor incrementally** — preserve functionality, improve structure
+
+### When User Requests New Feature:
+1. **Clarify requirements** — what exactly should it do
+2. **Plan implementation** — where it fits in structure
+3. **Implement to spec** — user's requirements, your standards
+4. **Verify checklist** — ensure compliance
+
+### NEVER:
+- Assume templates ARE the task
+- Delete working code without explicit permission
+- Ignore user's existing architecture choices
+- Replace custom logic with generic examples
