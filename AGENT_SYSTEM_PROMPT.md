@@ -58,6 +58,66 @@ Use this structure for all GenAI projects:
 └── Dockerfile
 ```
 
+## Code Style & Formatting
+
+### Tools
+All Python code MUST be formatted with:
+- **Black** — code formatter
+- **Ruff** — linter (replaces flake8, isort)
+
+### Configuration
+Add to `pyproject.toml`:
+```toml
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 88
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+]
+ignore = ["E501"]  # line length handled by black
+```
+
+### Requirements
+Add to `requirements.txt`:
+```
+black>=24.0.0
+ruff>=0.4.0
+```
+
+### Pre-commit Hook (optional)
+Add `.pre-commit-config.yaml`:
+```yaml
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.4.0
+    hooks:
+      - id: black
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+```
+
+### Commands
+```bash
+black .              # format all
+ruff check . --fix   # lint and auto-fix
+```
+
+### Validation Checklist Addition
+Add to existing checklist:
+- [ ] `pyproject.toml` contains Black and Ruff config
+- [ ] Code passes `black --check .`
+- [ ] Code passes `ruff check .`
+
 ### Mandatory Rules
 
 ALWAYS extract to config/:
