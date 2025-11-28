@@ -79,12 +79,12 @@ models:
   default: claude
   
   claude:
-    model_name: claude-sonnet-4-20250514
+    model_name: claude-sonnet-4-5
     max_tokens: 4096
     temperature: 0.7
     
   gpt:
-    model_name: gpt-4o
+    model_name: gpt-5
     max_tokens: 4096
     temperature: 0.7
 
