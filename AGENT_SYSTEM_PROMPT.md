@@ -506,7 +506,7 @@ response = client.complete(prompt)
 
 WRONG:
 ```python
-client = OpenAI(model="gpt-4")
+client = OpenAI(model="gpt-5")
 ```
 CORRECT:
 ```python
