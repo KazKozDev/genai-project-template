@@ -4,9 +4,9 @@
 
 ---
 
-## GenAI Project Structure Instructions
+# GenAI Project Structure Instructions
 
-### Activation
+## Activation
 
 Apply these rules when:
 - Creating a new project that uses LLM/GenAI capabilities
@@ -14,10 +14,9 @@ Apply these rules when:
 - Adding LLM functionality to an existing project
 - Reviewing GenAI project structure
 
-### Directory Structure
+## Directory Structure
 
 Use this structure for all GenAI projects:
-
 ```
 {project_name}/
 ├── config/
@@ -53,6 +52,7 @@ Use this structure for all GenAI projects:
 │   └── embeddings/
 ├── examples/
 ├── tests/
+├── pyproject.toml
 ├── requirements.txt
 ├── README.md
 └── Dockerfile
@@ -61,11 +61,13 @@ Use this structure for all GenAI projects:
 ## Code Style & Formatting
 
 ### Tools
+
 All Python code MUST be formatted with:
 - **Black** — code formatter
 - **Ruff** — linter (replaces flake8, isort)
 
 ### Configuration
+
 Add to `pyproject.toml`:
 ```toml
 [tool.black]
@@ -85,6 +87,7 @@ ignore = ["E501"]  # line length handled by black
 ```
 
 ### Requirements
+
 Add to `requirements.txt`:
 ```
 black>=24.0.0
@@ -92,6 +95,7 @@ ruff>=0.4.0
 ```
 
 ### Pre-commit Hook (optional)
+
 Add `.pre-commit-config.yaml`:
 ```yaml
 repos:
@@ -112,28 +116,22 @@ black .              # format all
 ruff check . --fix   # lint and auto-fix
 ```
 
-### Validation Checklist Addition
-Add to existing checklist:
-- [ ] `pyproject.toml` contains Black and Ruff config
-- [ ] Code passes `black --check .`
-- [ ] Code passes `ruff check .`
+## Mandatory Rules
 
-### Mandatory Rules
-
-ALWAYS extract to config/:
+**ALWAYS** extract to `config/`:
 - Model parameters (temperature, max_tokens, model_name)
 - Prompt templates
 - API endpoints
 - Logging settings
 
-NEVER hardcode:
+**NEVER** hardcode:
 - Prompt text in source files
 - Model names in code
 - API keys or secrets
 
-### Configuration Templates
+## Configuration Templates
 
-model_config.yaml:
+### model_config.yaml:
 ```yaml
 models:
   default: claude
@@ -157,7 +155,7 @@ cache:
   ttl_seconds: 3600
 ```
 
-prompts.yaml:
+### prompts.yaml:
 ```yaml
 system_prompts:
   default: |
@@ -177,9 +175,9 @@ templates:
     {text}
 ```
 
-### Required Components
+## Required Components
 
-1. Base LLM Client (src/llm/base.py):
+### Base LLM Client (src/llm/base.py):
 ```python
 from abc import ABC, abstractmethod
 from typing import Optional, List, Dict, Any
@@ -204,7 +202,7 @@ class BaseLLMClient(ABC):
         pass
 ```
 
-2. Rate Limiter (src/utils/rate_limiter.py):
+### Rate Limiter (src/utils/rate_limiter.py):
 ```python
 import time
 from collections import deque
@@ -230,7 +228,7 @@ class RateLimiter:
             self.timestamps.append(time.time())
 ```
 
-3. Token Counter (src/utils/token_counter.py):
+### Token Counter (src/utils/token_counter.py):
 ```python
 import tiktoken
 from typing import Optional
@@ -249,7 +247,7 @@ class TokenCounter:
         return self.encoder.decode(tokens[:max_tokens])
 ```
 
-4. Cache (src/utils/cache.py):
+### Cache (src/utils/cache.py):
 ```python
 import hashlib
 import json
@@ -294,7 +292,7 @@ class ResponseCache:
         path.write_text(json.dumps(data))
 ```
 
-5. Error Handler (src/handlers/error_handler.py):
+### Error Handler (src/handlers/error_handler.py):
 ```python
 import time
 import logging
@@ -333,11 +331,11 @@ def retry_on_error(
     return decorator
 ```
 
-### Required Tests
+## Required Tests
 
 Every GenAI project must include tests for core utilities. Create tests in `tests/` directory.
 
-Structure:
+### Structure:
 ```
 tests/
 ├── __init__.py
@@ -347,7 +345,7 @@ tests/
 └── test_error_handler.py
 ```
 
-test_rate_limiter.py:
+### test_rate_limiter.py:
 ```python
 import time
 import pytest
@@ -379,7 +377,7 @@ def test_rate_limiter_resets_after_window():
     assert limiter.get_current_usage()["requests_used"] == 1
 ```
 
-test_token_counter.py:
+### test_token_counter.py:
 ```python
 import pytest
 from src.utils import TokenCounter
@@ -420,7 +418,7 @@ def test_split_by_tokens():
         assert counter.count(chunk) <= 3
 ```
 
-test_cache.py:
+### test_cache.py:
 ```python
 import pytest
 import tempfile
@@ -470,7 +468,7 @@ def test_cache_clear(cache):
     assert cache.get("prompt1", "model") is None
 ```
 
-test_error_handler.py:
+### test_error_handler.py:
 ```python
 import pytest
 from src.handlers import retry_on_error, APIError, RateLimitError
@@ -524,72 +522,95 @@ def test_retry_specific_exceptions():
         raises_value_error()
 ```
 
-Add to requirements.txt for testing:
+### Add to requirements.txt for testing:
 ```
 pytest>=8.0.0
 pytest-cov>=4.0.0
 ```
 
-Run tests command:
+### Run tests command:
 ```bash
 pytest tests/ -v --cov=src --cov-report=term-missing
 ```
 
-### Validation Checklist
+## Validation Checklist
 
 Before completing any GenAI project task, verify:
-- Prompts are externalized to YAML or separate files
-- Model parameters are in config/
-- Base class exists for LLM clients
-- Rate limiting is implemented
-- Token counting is in place
-- Caching is configured
-- Error handling includes retry logic
-- Secrets use environment variables or secrets manager
-- Request/response logging is enabled
-- Tests exist for all utilities (rate limiter, cache, token counter, error handler)
-- Tests pass before deployment
 
-### Antipatterns to Flag
+### Code Style
+- [ ] `pyproject.toml` contains Black and Ruff config
+- [ ] Code passes `black --check .`
+- [ ] Code passes `ruff check .`
+
+### Structure & Config
+- [ ] Prompts are externalized to YAML or separate files
+- [ ] Model parameters are in `config/`
+- [ ] Base class exists for LLM clients
+
+### Core Components
+- [ ] Rate limiting is implemented
+- [ ] Token counting is in place
+- [ ] Caching is configured
+- [ ] Error handling includes retry logic
+
+### Security & Logging
+- [ ] Secrets use environment variables or secrets manager
+- [ ] Request/response logging is enabled
+
+### Testing
+- [ ] Tests exist for all utilities (rate limiter, cache, token counter, error handler)
+- [ ] Tests pass before deployment
+
+## Antipatterns to Flag
 
 When reviewing code, flag these patterns:
 
-WRONG:
+**WRONG:**
 ```python
 response = client.complete("Summarize this: " + text)
 ```
-CORRECT:
+
+**CORRECT:**
 ```python
 prompt = templates.get("summarize").format(text=text)
 response = client.complete(prompt)
 ```
 
-WRONG:
+---
+
+**WRONG:**
 ```python
 client = OpenAI(model="gpt-5")
 ```
-CORRECT:
+
+**CORRECT:**
 ```python
 client = LLMClient(config["models"]["default"])
 ```
 
-WRONG:
+---
+
+**WRONG:**
 ```python
 response = api.call(prompt)
 ```
-CORRECT:
+
+**CORRECT:**
 ```python
 @retry_on_error(max_retries=3)
 def call_api(prompt):
     return api.call(prompt)
 ```
 
-WRONG:
+---
+
+**WRONG:**
 ```python
 for item in items:
     process(item)
 ```
-CORRECT:
+
+**CORRECT:**
 ```python
 rate_limiter = RateLimiter(rpm=50)
 for item in items:
